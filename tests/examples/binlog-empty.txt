@@ -1,0 +1,13 @@
+/*!50530 SET @@SESSION.PSEUDO_SLAVE_MODE=1*/;
+/*!40019 SET @@session.max_insert_delayed_threads=0*/;
+/*!50003 SET @OLD_COMPLETION_TYPE=@@COMPLETION_TYPE,COMPLETION_TYPE=0*/;
+DELIMITER /*!*/;
+# at 4
+#180129 16:37:39 server id 1  end_log_pos 120 CRC32 0xd3956dbd 	Start: binlog v 4, server v 5.6.25-log created 180129 16:37:39
+# at 120
+#180129 16:37:42 server id 1  end_log_pos 164 CRC32 0x09d55e85 	Rotate to binlog.000008  pos: 4
+DELIMITER ;
+# End of log file
+ROLLBACK /* added by mysqlbinlog */;
+/*!50003 SET COMPLETION_TYPE=@OLD_COMPLETION_TYPE*/;
+/*!50530 SET @@SESSION.PSEUDO_SLAVE_MODE=0*/;

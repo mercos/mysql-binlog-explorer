@@ -1,0 +1,95 @@
+/*!50530 SET @@SESSION.PSEUDO_SLAVE_MODE=1*/;
+/*!40019 SET @@session.max_insert_delayed_threads=0*/;
+/*!50003 SET @OLD_COMPLETION_TYPE=@@COMPLETION_TYPE,COMPLETION_TYPE=0*/;
+DELIMITER /*!*/;
+# at 4
+#180129 17:28:01 server id 1  end_log_pos 120 CRC32 0x14aee375 	Start: binlog v 4, server v 5.6.25-log created 180129 17:28:01
+# at 120
+#180129 17:28:04 server id 1  end_log_pos 201 CRC32 0x9012c423 	Query	thread_id=1	exec_time=0	error_code=0
+SET TIMESTAMP=1517254084/*!*/;
+SET @@session.pseudo_thread_id=1/*!*/;
+SET @@session.foreign_key_checks=1, @@session.sql_auto_is_null=0, @@session.unique_checks=1, @@session.autocommit=1/*!*/;
+SET @@session.sql_mode=1075838976/*!*/;
+SET @@session.auto_increment_increment=1, @@session.auto_increment_offset=1/*!*/;
+/*!\C utf8 *//*!*/;
+SET @@session.character_set_client=33,@@session.collation_connection=33,@@session.collation_server=33/*!*/;
+SET @@session.lc_time_names=0/*!*/;
+SET @@session.collation_database=DEFAULT/*!*/;
+BEGIN
+/*!*/;
+# at 201
+#180129 17:28:04 server id 1  end_log_pos 266 CRC32 0x27551ee6 	Table_map: `binlog_analyser`.`test_table` mapped to number 72
+# at 266
+#180129 17:28:04 server id 1  end_log_pos 318 CRC32 0x37fba9ae 	Write_rows: table id 72 flags: STMT_END_F
+### INSERT INTO `binlog_analyser`.`test_table`
+### SET
+###   @1=1 /* INT meta=0 nullable=1 is_null=0 */
+###   @2='delete-me-1' /* VARSTRING(60) meta=60 nullable=1 is_null=0 */
+# at 318
+#180129 17:28:05 server id 1  end_log_pos 349 CRC32 0x711aa4e7 	Xid = 804
+COMMIT/*!*/;
+# at 349
+#180129 17:28:06 server id 1  end_log_pos 430 CRC32 0x70e5ee2f 	Query	thread_id=1	exec_time=0	error_code=0
+SET TIMESTAMP=1517254086/*!*/;
+BEGIN
+/*!*/;
+# at 430
+#180129 17:28:06 server id 1  end_log_pos 495 CRC32 0x79c65c6b 	Table_map: `binlog_analyser`.`test_table` mapped to number 72
+# at 495
+#180129 17:28:06 server id 1  end_log_pos 547 CRC32 0x1f25e511 	Delete_rows: table id 72 flags: STMT_END_F
+### DELETE FROM `binlog_analyser`.`test_table`
+### WHERE
+###   @1=1 /* INT meta=0 nullable=1 is_null=0 */
+###   @2='delete-me-1' /* VARSTRING(60) meta=60 nullable=1 is_null=0 */
+# at 547
+#180129 17:28:07 server id 1  end_log_pos 578 CRC32 0xf105d68a 	Xid = 836
+COMMIT/*!*/;
+# at 578
+#180129 17:28:09 server id 1  end_log_pos 659 CRC32 0x15dcd311 	Query	thread_id=1	exec_time=0	error_code=0
+SET TIMESTAMP=1517254089/*!*/;
+BEGIN
+/*!*/;
+# at 659
+#180129 17:28:09 server id 1  end_log_pos 724 CRC32 0xf6ffd741 	Table_map: `binlog_analyser`.`test_table` mapped to number 72
+# at 724
+#180129 17:28:09 server id 1  end_log_pos 778 CRC32 0xda481583 	Write_rows: table id 72 flags: STMT_END_F
+### INSERT INTO `binlog_analyser`.`test_table`
+### SET
+###   @1=1 /* INT meta=0 nullable=1 is_null=0 */
+###   @2='transaction-1' /* VARSTRING(60) meta=60 nullable=1 is_null=0 */
+# at 778
+#180129 17:28:10 server id 1  end_log_pos 843 CRC32 0x2bc22a00 	Table_map: `binlog_analyser`.`test_table` mapped to number 72
+# at 843
+#180129 17:28:10 server id 1  end_log_pos 897 CRC32 0xdf22ce7d 	Write_rows: table id 72 flags: STMT_END_F
+### INSERT INTO `binlog_analyser`.`test_table`
+### SET
+###   @1=2 /* INT meta=0 nullable=1 is_null=0 */
+###   @2='transaction-2' /* VARSTRING(60) meta=60 nullable=1 is_null=0 */
+# at 897
+#180129 17:28:10 server id 1  end_log_pos 962 CRC32 0xf989a0ef 	Table_map: `binlog_analyser`.`test_table` mapped to number 72
+# at 962
+#180129 17:28:10 server id 1  end_log_pos 1062 CRC32 0xc5f0e5d5 	Update_rows: table id 72 flags: STMT_END_F
+### UPDATE `binlog_analyser`.`test_table`
+### WHERE
+###   @1=1 /* INT meta=0 nullable=1 is_null=0 */
+###   @2='transaction-1' /* VARSTRING(60) meta=60 nullable=1 is_null=0 */
+### SET
+###   @1=1 /* INT meta=0 nullable=1 is_null=0 */
+###   @2='updated' /* VARSTRING(60) meta=60 nullable=1 is_null=0 */
+### UPDATE `binlog_analyser`.`test_table`
+### WHERE
+###   @1=2 /* INT meta=0 nullable=1 is_null=0 */
+###   @2='transaction-2' /* VARSTRING(60) meta=60 nullable=1 is_null=0 */
+### SET
+###   @1=2 /* INT meta=0 nullable=1 is_null=0 */
+###   @2='updated' /* VARSTRING(60) meta=60 nullable=1 is_null=0 */
+# at 1062
+#180129 17:28:11 server id 1  end_log_pos 1093 CRC32 0x6e987c0e 	Xid = 868
+COMMIT/*!*/;
+# at 1093
+#180129 17:28:13 server id 1  end_log_pos 1137 CRC32 0x7dde0aef 	Rotate to binlog.000019  pos: 4
+DELIMITER ;
+# End of log file
+ROLLBACK /* added by mysqlbinlog */;
+/*!50003 SET COMPLETION_TYPE=@OLD_COMPLETION_TYPE*/;
+/*!50530 SET @@SESSION.PSEUDO_SLAVE_MODE=0*/;
