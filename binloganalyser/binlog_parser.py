@@ -7,9 +7,6 @@ class Transaction(object):
         self.end_date = None
         self.statements = []
 
-    def __repr__(self):
-        return 'Transaction {} (duration: {})'.format(self.start_date.strftime("%Y-%m-%d %H:%M:%S"), self.duration)
-
     @property
     def duration(self):
         return (self.end_date - self.start_date).seconds

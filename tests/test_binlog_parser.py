@@ -31,7 +31,7 @@ class BinlogParserTests(TestCase):
         changes = transactions[2].statements[2].changes
 
         self.assertEqual(2, len(changes))
-        self.assertIn('UPDATE', changes[0].type)
+        self.assertIn('UPDATE', changes[0].command_type)
         self.assertIn("""UPDATE `binlog_analyser`.`test_table`
 WHERE
   @1=1 /* INT meta=0 nullable=1 is_null=0 */
