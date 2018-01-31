@@ -78,7 +78,8 @@
                 { "data": "total_changes" },
                 { "data": "duration" }
             ],
-            "order": [[1, 'asc']]
+            "order": [[1, 'asc']],
+            "lengthMenu": [[25, 50, 100, 500, 1000, 5000], [25, 50, 100, 500, 1000, 5000]]
         });
 
         $('#example tbody').on('click', 'td.details-control', function () {
