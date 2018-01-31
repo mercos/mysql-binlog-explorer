@@ -16,6 +16,11 @@ class BinlogParserTests(TestCase):
         self.assertEqual(datetime(2018, 1, 29, 17, 28, 4), transactions[0].start_date)
         self.assertEqual(datetime(2018, 1, 29, 17, 28, 5), transactions[0].end_date)
         self.assertEqual(1, transactions[0].duration)
+
+        self.assertEqual(1, transactions[0].total_changes)
+        self.assertEqual(1, transactions[1].total_changes)
+        self.assertEqual(4, transactions[2].total_changes)
+
         self.assertEqual(1, len(transactions[0].statements))
         self.assertEqual(1, len(transactions[0].statements[0].changes))
 

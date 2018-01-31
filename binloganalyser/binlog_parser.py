@@ -2,24 +2,28 @@ from datetime import datetime
 
 
 class Transaction(object):
-    def __init__(self):
-        self.start_date = None
-        self.end_date = None
-        self.statements = []
+    def __init__(self, start_date=None, end_date=None, statements=None):
+        self.start_date = start_date
+        self.end_date = end_date
+        self.statements = statements or []
 
     @property
     def duration(self):
-        return (self.end_date - self.start_date).seconds
+        return (self.end_date - self.start_date).seconds if self.end_date and self.start_date else 0
+
+    @property
+    def total_changes(self):
+        return sum([len(statement.changes) for statement in self.statements])
 
 
 class Statement(object):
-    def __init__(self):
-        self.changes = []
+    def __init__(self, changes=None):
+        self.changes = changes or []
 
 
 class Change(object):
-    def __init__(self, type, actual_command):
-        self.type = type
+    def __init__(self, command_type, actual_command):
+        self.command_type = command_type
         self.actual_command = actual_command
 
 
@@ -54,5 +58,5 @@ class BinlogParser(object):
         return transactions
 
     def _create_change(self, change_buffer):
-        type = change_buffer.split(' ')[0]
-        return Change(type, change_buffer)
+        command_type = change_buffer.split(' ')[0]
+        return Change(command_type, change_buffer)
