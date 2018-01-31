@@ -13,6 +13,7 @@ def index():
 
 @route('/binlog-parser/')
 def binlog_parser():
+    transactions = BinlogParser().parse(open('tests/examples/binarylog_01_31_1145.log'))
     return binlog_parser_presenter(transactions)
 
 
@@ -36,7 +37,5 @@ def binlog_parser_presenter(list_of_transactions):
 
 if __name__ == '__main__':
     bottle.debug(True)
-
-    transactions = BinlogParser().parse(open('tests/examples/binarylog_01_31_1145.log'))
 
     run(host='localhost', port=8080)
