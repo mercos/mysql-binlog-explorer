@@ -43,9 +43,7 @@ class BinlogParser(object):
             elif line.startswith("### UPDATE") or line.startswith("### INSERT") or line.startswith("### DELETE"):
                 if change_buffer:
                     statement.changes.append(self._create_change(change_buffer))
-                    change_buffer = ''
-                else:
-                    change_buffer = line[4:]
+                change_buffer = line[4:]
             elif line.startswith("###"):
                 change_buffer += line[4:]
             elif line.startswith("# at") and change_buffer:
