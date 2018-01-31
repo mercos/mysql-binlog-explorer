@@ -21,19 +21,19 @@
     <thead>
     <tr>
         <th></th>
-        <th>Name</th>
-        <th>Position</th>
-        <th>Office</th>
-        <th>Salary</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Total Changes</th>
+        <th>Duration</th>
     </tr>
     </thead>
     <tfoot>
     <tr>
         <th></th>
-        <th>Name</th>
-        <th>Position</th>
-        <th>Office</th>
-        <th>Salary</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Total Changes</th>
+        <th>Duration</th>
     </tr>
     </tfoot>
 </table>
@@ -41,28 +41,43 @@
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 <script>
-    /* Formatting function for row details - modify as you need */
-    function format(d) {
-        // `d` is the original data object for the row
-        return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
-            '<tr>' +
-            '<td>Full name:</td>' +
-            '<td>' + d.name + '</td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td>Extension number:</td>' +
-            '<td>' + d.extn + '</td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td>Extra info:</td>' +
-            '<td>And any further details here (images etc)...</td>' +
-            '</tr>' +
-            '</table>';
+
+    function format(transaction) {
+        var html = '<table width="100%" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
+                '<thead>' +
+                    '<th width="10%">Command Type</th>' +
+                    '<th width="90%">Actual Command</th>' +
+                '</thead>' +
+                '<tbody>';
+
+        transaction.statements.forEach(function(statement) {
+            statement.changes.forEach(function(change) {
+                html += '<tr>' +
+                            '<td>' + change.command_type + '</td>' +
+                            '<td>' + change.actual_command + '</td>' +
+                        '</tr>';
+            });
+        });
+        
+        html += '</tbody></table>';
+        return html;
     }
 
     $(document).ready(function () {
         var table = $('#example').DataTable({
-            "ajax": "/binlog-parser/",
+            "ajax": "binlog-parser/",
+            "columns": [
+                {
+                    "className":      'details-control',
+                    "orderable":      false,
+                    "data":           null,
+                    "defaultContent": ''
+                },
+                { "data": "start_date" },
+                { "data": "end_date" },
+                { "data": "total_changes" },
+                { "data": "duration" }
+            ],
             "order": [[1, 'asc']]
         });
 
