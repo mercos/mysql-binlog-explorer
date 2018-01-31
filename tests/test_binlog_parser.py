@@ -39,15 +39,6 @@ WHERE
 SET
   @1=1 /* INT meta=0 nullable=1 is_null=0 */
   @2='updated' /* VARSTRING(60) meta=60 nullable=1 is_null=0 */""", changes[0].actual_command)
-        print(transactions[0])
-        print(transactions[1])
-        print(transactions[2])
-
-    def test_print_transaction(self):
-        transactions = self.binlog_parser.parse(self.binlog_file)
-
-        self.assertEqual('Transaction 2018-01-29 17:28:04 (duration: 1)', str(transactions[0]))
-        self.assertEqual('Transaction 2018-01-29 17:28:09 (duration: 2)', str(transactions[2]))
 
     def tearDown(self):
         self.binlog_file.close()
