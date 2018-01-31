@@ -1,6 +1,7 @@
 import json
 
 import bottle
+import sys
 from bottle import route, run, template
 
 from binlog_parser import BinlogParser
@@ -13,7 +14,6 @@ def index():
 
 @route('/binlog-parser/')
 def binlog_parser():
-    transactions = BinlogParser().parse(open('tests/examples/binarylog_01_31_1145.log'))
     return binlog_parser_presenter(transactions)
 
 
@@ -32,10 +32,17 @@ def binlog_parser_presenter(list_of_transactions):
             } for statement in transaction.statements]
         } for transaction in list_of_transactions]
     }
-    
+
     return json.dumps(response, ensure_ascii=False)
 
+
 if __name__ == '__main__':
+    if len(sys.argv) != 2:
+        print("Usage: binloganalyser <binlog.file>")
+        exit(1)
+
     bottle.debug(True)
+
+    transactions = BinlogParser().parse(open(sys.argv[1]))
 
     run(host='localhost', port=8080)

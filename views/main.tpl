@@ -45,15 +45,17 @@
     function format(transaction) {
         var html = '<table width="100%" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
                 '<thead>' +
+                    '<th width="10%">Statement Number</th>' +
                     '<th width="10%">Command Type</th>' +
-                    '<th width="90%">Actual Command</th>' +
+                    '<th width="80%">Actual Command</th>' +
                 '</thead>' +
                 '<tbody>';
 
-        transaction.statements.forEach(function(statement) {
+        transaction.statements.forEach(function(statement, index) {
             statement.changes.forEach(function(change) {
                 html += '<tr>' +
-                            '<td>' + change.command_type + '</td>' +
+                            '<td align="center">' + index + '</td>' +
+                            '<td align="center">' + change.command_type + '</td>' +
                             '<td>' + change.actual_command + '</td>' +
                         '</tr>';
             });
