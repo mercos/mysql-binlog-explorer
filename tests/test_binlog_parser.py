@@ -37,21 +37,17 @@ class BinlogParserTests(TestCase):
 
         self.assertEqual(2, len(changes))
         self.assertIn('UPDATE', changes[0].command_type)
-        self.assertIn("""UPDATE `binlog_analyser`.`test_table`
-WHERE
-  @1=1 /* INT meta=0 nullable=1 is_null=0 */
-  @2='transaction-1' /* VARSTRING(60) meta=60 nullable=1 is_null=0 */
-SET
-  @1=1 /* INT meta=0 nullable=1 is_null=0 */
-  @2='updated' /* VARSTRING(60) meta=60 nullable=1 is_null=0 */""", changes[0].actual_command)
         self.assertIn('UPDATE', changes[1].command_type)
-        self.assertIn("""UPDATE `binlog_analyser`.`test_table`
-WHERE
-  @1=2 /* INT meta=0 nullable=1 is_null=0 */
-  @2='transaction-2' /* VARSTRING(60) meta=60 nullable=1 is_null=0 */
-SET
-  @1=2 /* INT meta=0 nullable=1 is_null=0 */
-  @2='updated' /* VARSTRING(60) meta=60 nullable=1 is_null=0 */""", changes[1].actual_command)
+        self.assertEqual(clean_string(
+            'UPDATE `binlog_analyser`.`test_table` WHERE @1=1 @2=\'transaction-1\' SET @1=1 @2=\'updated\''),
+            clean_string(changes[0].actual_command))
+        self.assertEqual(clean_string(
+            'UPDATE `binlog_analyser`.`test_table` WHERE @1=2 @2=\'transaction-2\' SET @1=2 @2=\'updated\''),
+            clean_string(changes[1].actual_command))
 
     def tearDown(self):
         self.binlog_file.close()
+
+
+def clean_string(string):
+    return string.replace('\n', '').replace(' ', '')

@@ -1,3 +1,4 @@
+import re
 from datetime import datetime
 
 
@@ -57,4 +58,5 @@ class BinlogParser(object):
 
     def _create_change(self, change_buffer):
         command_type = change_buffer.split(' ')[0]
-        return Change(command_type, change_buffer)
+        change_instruction_without_comments = re.sub("/\*.*\*/", "", change_buffer)
+        return Change(command_type, change_instruction_without_comments)
