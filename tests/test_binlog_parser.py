@@ -1,7 +1,7 @@
 from datetime import datetime
 from unittest.case import TestCase
 
-from binloganalyser.binlog_parser import BinlogParser
+from binlogexplorer.binlog_parser import BinlogParser
 
 
 class BinlogParserTests(TestCase):

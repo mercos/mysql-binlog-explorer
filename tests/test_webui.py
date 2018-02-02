@@ -2,8 +2,8 @@ from unittest.case import TestCase
 
 from datetime import datetime
 
-from binloganalyser.binlog_parser import Transaction, Statement, Change
-from binloganalyser.web import binlog_parser_presenter
+from binlogexplorer.binlog_parser import Transaction, Statement, Change
+from binlogexplorer.webui import binlog_parser_presenter
 
 
 class WebTests(TestCase):
