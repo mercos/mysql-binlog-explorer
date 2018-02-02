@@ -15,6 +15,7 @@ mysql-binlog-explorer ~/logs/mysql-bin-changelog.411078
 
 - Enable binlog (configuration varies depending on environment)
 - Enable row format for binlog: `binlog_format=ROW`
+- This kind o change needs to restart the server so **be careful**
 
 In a local mysql installed with `brew` the above would be converted to:
 

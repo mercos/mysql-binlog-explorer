@@ -38,7 +38,7 @@ def binlog_parser_presenter(list_of_transactions):
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:
-        print("Usage: binloganalyser <binlog.file>")
+        print("Usage: mysql-binlog-explorer <binlog.file>")
         exit(1)
 
     bottle.debug(True)
