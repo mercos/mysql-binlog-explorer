@@ -1,10 +1,28 @@
 import json
+import os
 import sys
 
 import bottle
-from bottle import route, run, template
+from bottle import route, run, template, static_file
 
 from binlog_parser import BinlogParser
+
+CURRENT_DIRECTORY = os.path.join(os.path.dirname(__file__))
+TEMPLATE_DIR = os.path.join(CURRENT_DIRECTORY, 'template')
+STATIC_DIR = os.path.join(CURRENT_DIRECTORY, 'static')
+
+bottle.debug(True)
+bottle.TEMPLATE_PATH = [TEMPLATE_DIR]
+
+
+@route('/static/<filename>')
+def server_static(filename):
+    return static_file(filename, root=STATIC_DIR)
+
+
+@route('/images/<filename>')
+def server_images(filename):
+    return server_static(filename)
 
 
 @route('/')
@@ -36,18 +54,22 @@ def binlog_parser_presenter(list_of_transactions):
     return json.dumps(response, ensure_ascii=False)
 
 
-if __name__ == '__main__':
+def main():
     if len(sys.argv) <= 1:
         print("Usage: mysql-binlog-explorer <binlog.file1> <binlog.file2> <binlog.file...N>")
         exit(1)
 
-    bottle.debug(True)
-    files = sys.argv[1:]
+    global transactions
     transactions = []
+    files = sys.argv[1:]
 
     for binlog_file in files:
-        print('Parsing {}'.format(binlog_file))
+        print('Parsing {}...'.format(binlog_file))
         with open(binlog_file) as content:
             transactions += BinlogParser().parse(content)
 
     run(host='localhost', port=8080)
+
+
+if __name__ == '__main__':
+    main()

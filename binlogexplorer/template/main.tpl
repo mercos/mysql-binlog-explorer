@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Binlog Analyser</title>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="/static/jquery.dataTables.min.css">
     <style>
         td.details-control {
-            background: url('https://datatables.net/examples/resources/details_open.png') no-repeat center center;
+            background: url('/static/details_open.png') no-repeat center center;
             cursor: pointer;
         }
 
         tr.shown td.details-control {
-            background: url('https://datatables.net/examples/resources/details_close.png') no-repeat center center;
+            background: url('/static/details_close.png') no-repeat center center;
         }
     </style>
 </head>
@@ -38,8 +38,8 @@
     </tfoot>
 </table>
 
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="/static/jquery-1.12.4.min.js"></script>
+<script src="/static/jquery.dataTables.min.js"></script>
 <script>
 
     function format(transaction) {
