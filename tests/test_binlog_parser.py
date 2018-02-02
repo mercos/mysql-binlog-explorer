@@ -1,13 +1,16 @@
+import os
 from datetime import datetime
 from unittest.case import TestCase
 
 from binlogexplorer.binlog_parser import BinlogParser
 
+EXAMPLES_FOLDER = os.path.join(os.path.dirname(__file__), 'examples')
+
 
 class BinlogParserTests(TestCase):
     def setUp(self):
         self.binlog_parser = BinlogParser()
-        self.binlog_file = open('examples/binlog-transaction-sample.txt')
+        self.binlog_file = open(os.path.join(EXAMPLES_FOLDER, 'binlog-transaction-sample.txt'))
 
     def test_parse_transactions(self):
         transactions = self.binlog_parser.parse(self.binlog_file)
