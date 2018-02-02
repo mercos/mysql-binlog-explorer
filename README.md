@@ -4,14 +4,14 @@ MySQL binlogs are the foundation for replication, but them can be useful for tra
 
 This application aims to aid in tracking which transactions are being too write intensves.
 
-# usage (simplified)
+## usage (simplified)
 
 ```
 pip install mysql-binlog-explorer
 mysql-binlog-explorer ~/logs/mysql-bin-changelog.411078
 ```
 
-# usage (the real deal)
+## usage (the real deal)
 
 - Enable binlog (configuration varies depending on environment)
 - Enable row format for binlog: `binlog_format=ROW`
@@ -44,7 +44,7 @@ mysql-binlog-explorer my-bin-log.txt
 ```
 
 
-# caveats
+## caveats
 
 - Tested only with MySQL 5.6 binlogs, othere versions probabbly have different formats. Create a PR for new formats if you may so.
-
+- The result of the parsing is stored entirely in-memory, so for very large files (or set of)
