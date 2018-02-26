@@ -1,6 +1,8 @@
 import re
 from datetime import datetime
 
+from decimal import Decimal, InvalidOperation
+
 
 class Transaction(object):
     def __init__(self, start_date=None, end_date=None, statements=None):
@@ -23,9 +25,11 @@ class Statement(object):
 
 
 class Change(object):
-    def __init__(self, command_type, actual_command):
+    def __init__(self, command_type, actual_command, where_parameters, set_parameters):
         self.command_type = command_type
         self.actual_command = actual_command
+        self.where_parameters = where_parameters
+        self.set_parameters = set_parameters
 
 
 class BinlogParser(object):
@@ -59,4 +63,37 @@ class BinlogParser(object):
     def _create_change(self, change_buffer):
         command_type = change_buffer.split(' ')[0]
         change_instruction_without_comments = re.sub("/\*.*\*/", "", change_buffer)
-        return Change(command_type, change_instruction_without_comments)
+        where_parameters, set_parameters = self._extract_parameter(command_type, change_instruction_without_comments)
+        return Change(command_type, change_instruction_without_comments, where_parameters, set_parameters)
+
+    def _extract_parameter(self, command_type, change_instruction):
+        first_group, second_group = [], []
+        all_raw_parameters = re.findall("@\d=.*?\s", change_instruction)
+
+        group = first_group
+        has_two_groups = False
+        for index, raw_parameter in enumerate(all_raw_parameters):
+            if index > 0 and raw_parameter.startswith("@1"):
+                group = second_group
+                has_two_groups = True
+
+            parameter = raw_parameter.split('=')[1].strip()
+            parameter_is_quoted = parameter.startswith("'") or parameter.startswith('"')
+            if parameter_is_quoted:
+                parameter = parameter[1:len(parameter) - 1]
+            group.append(parse_to_number_if_possible(parameter))
+
+        if command_type == 'DELETE':
+            return first_group, []
+
+        return (first_group, second_group) if has_two_groups else ([], first_group)
+
+
+def parse_to_number_if_possible(parameter):
+    try:
+        return Decimal(parameter)
+    except InvalidOperation:
+        try:
+            return float(parameter)
+        except ValueError:
+            return parameter
