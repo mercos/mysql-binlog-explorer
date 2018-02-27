@@ -40,7 +40,9 @@ class BinlogParserTests(TestCase):
 
         self.assertEqual(2, len(changes))
         self.assertIn('UPDATE', changes[0].command_type)
+        self.assertEqual('`binlog_analyser`.`test_table`', changes[0].table)
         self.assertIn('UPDATE', changes[1].command_type)
+        self.assertEqual('`binlog_analyser`.`test_table`', changes[1].table)
         self.assertEqual(clean_string(
             'UPDATE `binlog_analyser`.`test_table` WHERE @1=1 @2=\'transaction-1\' SET @1=1 @2=\'updated\''),
             clean_string(changes[0].actual_command))

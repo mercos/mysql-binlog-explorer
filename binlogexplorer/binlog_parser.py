@@ -25,11 +25,12 @@ class Statement(object):
 
 
 class Change(object):
-    def __init__(self, command_type, actual_command, where_parameters, set_parameters):
+    def __init__(self, command_type='', table='', actual_command='', where_parameters=None, set_parameters=None):
         self.command_type = command_type
+        self.table = table
         self.actual_command = actual_command
-        self.where_parameters = where_parameters
-        self.set_parameters = set_parameters
+        self.where_parameters = where_parameters or []
+        self.set_parameters = set_parameters or []
 
 
 class BinlogParser(object):
@@ -63,8 +64,13 @@ class BinlogParser(object):
     def _create_change(self, change_buffer):
         command_type = change_buffer.split(' ')[0]
         change_instruction_without_comments = re.sub("/\*.*\*/", "", change_buffer)
+        table = self._extract_table(change_instruction_without_comments)
         where_parameters, set_parameters = self._extract_parameter(command_type, change_instruction_without_comments)
-        return Change(command_type, change_instruction_without_comments, where_parameters, set_parameters)
+        return Change(command_type, table, change_instruction_without_comments, where_parameters, set_parameters)
+
+    def _extract_table(self, change_instruction_without_comments):
+        table_name = re.findall("`.*?`\s", change_instruction_without_comments)[0]
+        return table_name.strip()
 
     def _extract_parameter(self, command_type, change_instruction):
         first_group, second_group = [], []
