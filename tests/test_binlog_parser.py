@@ -55,24 +55,24 @@ class BinlogParserTests(TestCase):
 
         insert_change = transactions[0].statements[0].changes[0]
         self.assertIn('INSERT', insert_change.command_type)
-        self.assertEqual([1, 'delete-me-1'], insert_change.set_parameters)
-        self.assertEqual([], insert_change.where_parameters)
+        self.assertEqual({1: 1, 2: 'delete-me-1'}, insert_change.set_parameters)
+        self.assertEqual({}, insert_change.where_parameters)
 
     def test_parse_parameters_of_a_delete_statement(self):
         transactions = self.binlog_parser.parse(self.binlog_file)
 
         delete_change = transactions[1].statements[0].changes[0]
         self.assertIn('DELETE', delete_change.command_type)
-        self.assertEqual([], delete_change.set_parameters)
-        self.assertEqual([1, 'delete-me-1'], delete_change.where_parameters)
+        self.assertEqual({}, delete_change.set_parameters)
+        self.assertEqual({1: 1, 2: 'delete-me-1'}, delete_change.where_parameters)
 
     def test_parse_parameters_of_a_update_statement(self):
         transactions = self.binlog_parser.parse(self.binlog_file)
 
         update_change = transactions[2].statements[2].changes[0]
         self.assertIn('UPDATE', update_change.command_type)
-        self.assertEqual([1, 'updated'], update_change.set_parameters)
-        self.assertEqual([1, 'transaction-1'], update_change.where_parameters)
+        self.assertEqual({1: 1, 2: 'updated'}, update_change.set_parameters)
+        self.assertEqual({1: 1, 2: 'transaction-1'}, update_change.where_parameters)
 
     def tearDown(self):
         self.binlog_file.close()

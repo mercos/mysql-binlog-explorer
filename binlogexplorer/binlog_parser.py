@@ -29,8 +29,8 @@ class Change(object):
         self.command_type = command_type
         self.table = table
         self.actual_command = actual_command
-        self.where_parameters = where_parameters or []
-        self.set_parameters = set_parameters or []
+        self.where_parameters = where_parameters or {}
+        self.set_parameters = set_parameters or {}
 
 
 class BinlogParser(object):
@@ -73,7 +73,7 @@ class BinlogParser(object):
         return table_name.strip()
 
     def _extract_parameter(self, command_type, change_instruction):
-        first_group, second_group = [], []
+        first_group, second_group = {}, {}
         all_raw_parameters = re.findall("@\d=.*?\s", change_instruction)
 
         group = first_group
@@ -83,16 +83,17 @@ class BinlogParser(object):
                 group = second_group
                 has_two_groups = True
 
-            parameter = raw_parameter.split('=')[1].strip()
+            identifier, parameter = raw_parameter.split('=')
+            parameter = parameter.strip()
             parameter_is_quoted = parameter.startswith("'") or parameter.startswith('"')
             if parameter_is_quoted:
                 parameter = parameter[1:len(parameter) - 1]
-            group.append(parse_to_number_if_possible(parameter))
+            group[int(identifier[1:])] = parse_to_number_if_possible(parameter)
 
         if command_type == 'DELETE':
-            return first_group, []
+            return first_group, {}
 
-        return (first_group, second_group) if has_two_groups else ([], first_group)
+        return (first_group, second_group) if has_two_groups else ({}, first_group)
 
 
 def parse_to_number_if_possible(parameter):
