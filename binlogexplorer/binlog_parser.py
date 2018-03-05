@@ -83,7 +83,7 @@ class BinlogParser(object):
                 group = second_group
                 has_two_groups = True
 
-            identifier, parameter = raw_parameter.split('=')
+            identifier, parameter = raw_parameter.split('=')[:2]
             parameter = parameter.strip()
             parameter_is_quoted = parameter.startswith("'") or parameter.startswith('"')
             if parameter_is_quoted:
