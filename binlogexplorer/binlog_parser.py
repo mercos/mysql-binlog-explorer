@@ -5,9 +5,10 @@ from decimal import Decimal, InvalidOperation
 
 
 class Transaction(object):
-    def __init__(self, start_date=None, end_date=None, statements=None):
+    def __init__(self, start_date=None, end_date=None, identifiers=None, statements=None):
         self.start_date = start_date
         self.end_date = end_date
+        self.identifiers = identifiers or set()
         self.statements = statements or []
 
     @property

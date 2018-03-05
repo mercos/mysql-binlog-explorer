@@ -25,6 +25,7 @@
         <th>End Date</th>
         <th>Total Changes</th>
         <th>Duration</th>
+        <th>Identifiers</th>
     </tr>
     </thead>
     <tfoot>
@@ -34,6 +35,7 @@
         <th>End Date</th>
         <th>Total Changes</th>
         <th>Duration</th>
+        <th>Identifiers</th>
     </tr>
     </tfoot>
 </table>
@@ -78,7 +80,8 @@
                 { "data": "start_date" },
                 { "data": "end_date" },
                 { "data": "total_changes" },
-                { "data": "duration" }
+                { "data": "duration" },
+                { "data": "identifiers" }
             ],
             "order": [[1, 'asc']],
             "lengthMenu": [[25, 50, 100, 500, 1000, 5000], [25, 50, 100, 500, 1000, 5000]]

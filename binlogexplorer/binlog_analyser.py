@@ -15,6 +15,7 @@ class BinlogAnalyser(object):
                         identifier = identifier_at_set or identifier_at_where
 
                         if identifier:
+                            transaction.identifiers.add(identifier)
                             total_changes_by_id[identifier] = total_changes_by_id.get(identifier, 0) + 1
 
-        return total_changes_by_id
+        return transactions, total_changes_by_id

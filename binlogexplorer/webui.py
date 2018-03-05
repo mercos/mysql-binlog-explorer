@@ -33,12 +33,6 @@ def index():
 
 @route('/binlog-parser/')
 def binlog_parser():
-    setup = {}
-    result = BinlogAnalyser(setup).analyse(transactions)
-    itens = sorted(result.iteritems(), key=lambda x: x[1], reverse=True)
-    for key, value in itens:
-        print(key, value)
-
     return binlog_parser_presenter(transactions)
 
 
@@ -48,6 +42,7 @@ def binlog_parser_presenter(list_of_transactions):
             'start_date': transaction.start_date.strftime("%Y-%m-%d %H:%M:%S") if transaction.start_date else '',
             'end_date': transaction.end_date.strftime("%Y-%m-%d %H:%M:%S") if transaction.end_date else '',
             'duration': transaction.duration,
+            'identifiers': ' '.join(map(lambda identifier: '({})'.format(identifier), transaction.identifiers)),
             'total_changes': transaction.total_changes,
             'statements': [{
                 'changes': [{
@@ -74,8 +69,23 @@ def main():
         print('Parsing {}...'.format(binlog_file))
         with open(binlog_file) as content:
             transactions += BinlogParser().parse(content)
+            transactions = identify_transactions(transactions)
 
     run(host='localhost', port=8080)
+
+
+def identify_transactions(transactions):
+    if not os.path.exists('schema_mapping.json'):
+        return transactions
+
+    with open('schema_mapping.json') as mapping:
+        setup = json.load(mapping)
+        transactions_with_identifier, result = BinlogAnalyser(setup).analyse(transactions)
+        itens = sorted(result.iteritems(), key=lambda x: x[1], reverse=True)
+        for key, value in itens:
+            print(key, value)
+
+        return transactions_with_identifier
 
 
 if __name__ == '__main__':

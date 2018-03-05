@@ -39,8 +39,9 @@ class BinlogAnalyserTests(TestCase):
             ])
         ]
 
-        result = self.binlog_analyser.analyse(transactions)
+        transactions, result = self.binlog_analyser.analyse(transactions)
 
+        self.assertEqual(transactions[0].identifiers, {100, 999})
         self.assertEqual(result, {
             100: 3,
             999: 2
