@@ -5,6 +5,7 @@ import sys
 import bottle
 from bottle import route, run, template, static_file
 
+from binlog_analyser import BinlogAnalyser
 from binlog_parser import BinlogParser
 
 CURRENT_DIRECTORY = os.path.join(os.path.dirname(__file__))
@@ -32,6 +33,12 @@ def index():
 
 @route('/binlog-parser/')
 def binlog_parser():
+    setup = {}
+    result = BinlogAnalyser(setup).analyse(transactions)
+    itens = sorted(result.iteritems(), key=lambda x: x[1], reverse=True)
+    for key, value in itens:
+        print(key, value)
+
     return binlog_parser_presenter(transactions)
 
 
