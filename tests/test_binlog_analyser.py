@@ -32,6 +32,10 @@ class BinlogAnalyserTests(TestCase):
                     Change(table='`binlog_analyser`.`a_table`',
                            where_parameters={1: 999}, set_parameters={}),
                     Change(table='`binlog_analyser`.`a_table`',
+                           where_parameters={1: 999}, set_parameters={}),
+                    Change(table='`binlog_analyser`.`a_table`',
+                           where_parameters={1: 999}, set_parameters={}),
+                    Change(table='`binlog_analyser`.`a_table`',
                            where_parameters={1: 100}, set_parameters={1: 100}),
                     Change(table='`binlog_analyser`.`a_table`',
                            where_parameters={}, set_parameters={1: 999})
@@ -39,10 +43,51 @@ class BinlogAnalyserTests(TestCase):
             ])
         ]
 
-        transactions, result = self.binlog_analyser.analyse(transactions)
+        transactions, report = self.binlog_analyser.analyse(transactions)
 
         self.assertEqual(transactions[0].identifiers, {100, 999})
-        self.assertEqual(result, {
-            100: 3,
-            999: 2
-        })
+        self.assertEqual(report['changes_by_identifier'], [
+            (999, 4),
+            (100, 3),
+        ])
+
+    def test_group_transactions_by_identifier(self):
+        self.setup['group_identifier'] = {
+            '`binlog_analyser`.`a_table`': 1
+        }
+
+        transactions = [
+            Transaction(statements=[
+                Statement(changes=[
+                    Change(table='`binlog_analyser`.`a_table`',
+                           where_parameters={1: 100}, set_parameters={}),
+                    Change(table='`binlog_analyser`.`a_table`',
+                           where_parameters={1: 999}, set_parameters={}),
+                ])
+            ]),
+            Transaction(statements=[
+                Statement(changes=[
+                    Change(table='`binlog_analyser`.`a_table`',
+                           where_parameters={1: 999}, set_parameters={}),
+                ])
+            ]),
+            Transaction(statements=[
+                Statement(changes=[
+                    Change(table='`binlog_analyser`.`a_table`',
+                           where_parameters={1: 100}, set_parameters={}),
+                ])
+            ]),
+            Transaction(statements=[
+                Statement(changes=[
+                    Change(table='`binlog_analyser`.`a_table`',
+                           where_parameters={1: 999}, set_parameters={}),
+                ])
+            ]),
+        ]
+
+        transactions, report = self.binlog_analyser.analyse(transactions)
+
+        self.assertEqual(report['transactions_by_identifier'], [
+            (999, 3),
+            (100, 2),
+        ])

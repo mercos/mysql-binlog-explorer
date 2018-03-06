@@ -81,8 +81,13 @@ def identify_transactions(transactions):
     with open('schema_mapping.json') as mapping:
         setup = json.load(mapping)
         transactions_with_identifier, result = BinlogAnalyser(setup).analyse(transactions)
-        itens = sorted(result.iteritems(), key=lambda x: x[1], reverse=True)
-        for key, value in itens:
+
+        print "========== Transactions By Identifier =========="
+        for key, value in result['transactions_by_identifier']:
+            print(key, value)
+
+        print "========== Changes By Identifier =========="
+        for key, value in result['changes_by_identifier']:
             print(key, value)
 
         return transactions_with_identifier
