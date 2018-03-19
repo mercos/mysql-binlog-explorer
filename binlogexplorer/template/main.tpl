@@ -17,6 +17,16 @@
 </head>
 <body>
 
+<div style="width:45%; display: inline-block">
+    <h1 style="text-align: center">Identifiers by Transactions</h1>
+    <canvas id="chart-by-transactions"></canvas>
+</div>
+
+<div style="width:45%; display: inline-block">
+    <h1 style="text-align: center">Identifiers by Changes</h1>
+    <canvas id="chart-by-changes"></canvas>
+</div>
+
 <table id="example" class="display" cellspacing="0" width="100%">
     <thead>
     <tr>
@@ -42,6 +52,9 @@
 
 <script src="/static/jquery-1.12.4.min.js"></script>
 <script src="/static/jquery.dataTables.min.js"></script>
+<script src="/static/Chart.bundle.min.js"></script>
+<script src="/static/distinct-colors.min.js"></script>
+<script src="http://www.chartjs.org/samples/latest/utils.js"></script>
 <script>
 
     function format(transaction) {
@@ -62,12 +75,12 @@
                         '</tr>';
             });
         });
-        
+
         html += '</tbody></table>';
         return html;
     }
 
-    $(document).ready(function () {
+    $(document).ready(function(){
         var table = $('#example').DataTable({
             "ajax": "binlog-parser/",
             "columns": [
@@ -100,6 +113,50 @@
                 tr.addClass('shown');
             }
         });
+
+        $.get({url: 'binlog-parser/analysis', success: function(data){
+            data = JSON.parse(data);
+            createChart('Changes by ID', 'chart-by-changes', data.changes_by_identifier);
+            createChart('Transactions by ID', 'chart-by-transactions', data.transactions_by_identifier);
+        }})
+
+        function createChart(label, canvas_id, itens) {
+            var top10Labels = [];
+            var top10Values = [];
+            var othersValue = 0
+            var othersLabel = 'Others'
+            var pieColors = (new DistinctColors({count: 10, lightMin: 50})).map(function (item) {
+                return item.hex()
+            });
+
+            for (var i = 0; i < itens.length; i++) {
+                if (top10Values.length < 10) {
+                    top10Labels.push(itens[i][0]);
+                    top10Values.push(itens[i][1]);
+                } else {
+                    othersValue += itens[i][1]
+                }
+            }
+
+            var config = {
+                type: 'pie',
+                data: {
+                    datasets: [{
+                        data: top10Values.length < 10 ? top10Values : top10Values.concat([othersValue]),
+                        backgroundColor: pieColors,
+                        label: label
+                    }],
+                    labels: top10Labels.length < 10 ? top10Labels : top10Labels.concat([othersLabel])
+                },
+                options: {
+                    responsive: true
+                }
+            };
+
+            var ctx = document.getElementById(canvas_id).getContext('2d');
+            new Chart(ctx, config);
+        }
+
     });
 </script>
 </body>

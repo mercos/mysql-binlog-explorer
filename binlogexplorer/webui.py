@@ -1,4 +1,5 @@
 import json
+import simplejson
 import os
 import sys
 
@@ -36,6 +37,11 @@ def binlog_parser():
     return binlog_parser_presenter(transactions)
 
 
+@route('/binlog-parser/analysis')
+def binlog_analysis():
+    return simplejson.dumps(analysis)
+
+
 def binlog_parser_presenter(list_of_transactions):
     response = {
         'data': [{
@@ -57,11 +63,12 @@ def binlog_parser_presenter(list_of_transactions):
 
 
 def main():
+    global transactions
+
     if len(sys.argv) <= 1:
         print("Usage: mysql-binlog-explorer <binlog.file1> <binlog.file2> <binlog.file...N>")
         exit(1)
 
-    global transactions
     transactions = []
     files = sys.argv[1:]
 
@@ -75,21 +82,14 @@ def main():
 
 
 def identify_transactions(transactions):
+    global analysis
+
     if not os.path.exists('schema_mapping.json'):
         return transactions
 
     with open('schema_mapping.json') as mapping:
         setup = json.load(mapping)
-        transactions_with_identifier, result = BinlogAnalyser(setup).analyse(transactions)
-
-        print "========== Transactions By Identifier =========="
-        for key, value in result['transactions_by_identifier']:
-            print(key, value)
-
-        print "========== Changes By Identifier =========="
-        for key, value in result['changes_by_identifier']:
-            print(key, value)
-
+        transactions_with_identifier, analysis = BinlogAnalyser(setup).analyse(transactions)
         return transactions_with_identifier
 
 
