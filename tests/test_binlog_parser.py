@@ -92,6 +92,22 @@ class BinlogParserTests(TestCase):
         self.assertEqual({'nice_column': 1, 'beautiful_column': 'updated'}, update_change.set_parameters)
         self.assertEqual({'nice_column': 1, 'beautiful_column': 'transaction-1'}, update_change.where_parameters)
 
+    def test_parse_actual_command_replacing_column_number_with_actual_name(self):
+        schema = StringIO("""
+        create table test_table
+        (
+            nice_column int null,
+            beautiful_column varchar(20) null
+        );         
+        """)
+        binlog_parser = BinlogParser(column_mapping=parse_schema_to_column_mapping(schema))
+        transactions = binlog_parser.parse(self.binlog_file)
+
+        update_change = transactions[2].statements[2].changes[0]
+        self.assertEqual(clean_string(
+            'UPDATE `binlog_analyser`.`test_table` WHERE `nice_column`=1 `beautiful_column`=\'transaction-1\' SET `nice_column`=1 `beautiful_column`=\'updated\''),
+            clean_string(update_change.actual_command))
+
     def tearDown(self):
         self.binlog_file.close()
 
