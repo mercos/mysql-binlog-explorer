@@ -67,25 +67,31 @@ class BinlogParser(object):
 
     def _create_change(self, change_buffer):
         command_type = change_buffer.split(' ')[0]
-        change_instruction_without_comments = re.sub("/\*.*\*/", "", change_buffer)
-        table = self._extract_table(change_instruction_without_comments)
+        change_without_comments = re.sub("/\*.*\*/", "", change_buffer)
+        table = self._extract_table(change_without_comments)
         table_name_without_namespace = table.replace('`', '').split('.')[-1]
         column_mapping_for_this_table = self.column_mapping.get(table_name_without_namespace, {})
 
         def get_actual_name(match):
             actual_name = column_mapping_for_this_table.get(int(match.group(1)), match.group(0))
             return actual_name if actual_name.startswith('@') else '`{}`'.format(actual_name)
-        change_instruction_with_actual_column_names = re.sub("@(\d+)",
+        change_without_comments_and_actual_column_names = re.sub("@(\d+)",
                                                              get_actual_name,
-                                                             change_instruction_without_comments)
+                                                             change_without_comments)
 
         where_parameters, set_parameters = self._extract_parameter(
             command_type,
-            change_instruction_without_comments,
+            change_without_comments,
             column_mapping_for_this_table
         )
 
-        return Change(command_type, table, change_instruction_with_actual_column_names, where_parameters, set_parameters)
+        return Change(
+            command_type,
+            table,
+            change_without_comments_and_actual_column_names if self.column_mapping else change_without_comments,
+            where_parameters,
+            set_parameters
+        )
 
     def _extract_table(self, change_instruction_without_comments):
         table_name = re.findall("`.*?`\s", change_instruction_without_comments)[0]
