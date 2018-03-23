@@ -1,6 +1,6 @@
 class BinlogAnalyser(object):
-    def __init__(self, setup):
-        self.setup = setup
+    def __init__(self, group_identifier):
+        self.group_identifier = group_identifier
 
     def analyse(self, transactions):
         changes_by_identifier = {}
@@ -9,10 +9,9 @@ class BinlogAnalyser(object):
         for transaction in transactions:
             for statement in transaction.statements:
                 for change in statement.changes:
-                    index_of_the_column_with_the_identifier = self.setup['group_identifier'].get(change.table)
-                    if index_of_the_column_with_the_identifier:
-                        identifier_at_where = change.where_parameters.get(index_of_the_column_with_the_identifier)
-                        identifier_at_set = change.set_parameters.get(index_of_the_column_with_the_identifier)
+                    if self.group_identifier:
+                        identifier_at_where = change.where_parameters.get(self.group_identifier)
+                        identifier_at_set = change.set_parameters.get(self.group_identifier)
                         identifier = identifier_at_set or identifier_at_where
 
                         if identifier:
