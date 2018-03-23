@@ -74,7 +74,8 @@ def main():
     global transactions
     global analysis
 
-    parser = BinlogParser(parse_schema_to_column_mapping(cli.schema_ddl))
+    column_mapping = parse_schema_to_column_mapping(cli.schema_ddl) if cli.schema_ddl else {}
+    parser = BinlogParser(column_mapping)
     analyser = BinlogAnalyser(cli.group_identifier)
 
     transactions = []
