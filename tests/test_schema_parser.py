@@ -14,7 +14,7 @@ class SchamParserTests(TestCase):
                                     
                                     create table test_table2
                                     (
-                                        table2_column_1 int null, table2_column_2 varchar(20) null, table2_column_3 int null 
+                                        table2_column_1 int null, table2_column_2 decimal(9,2) null, table2_column_3 int null 
                                     );""")
 
     def test_parse_tables_with_it_columns_indexed_by_order(self):
