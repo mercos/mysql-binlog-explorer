@@ -87,6 +87,7 @@ def identify_transactions(transactions):
     if not os.path.exists('schema_mapping.json'):
         return transactions
 
+    print('Schema mapping found. Identifying transactions...')
     with open('schema_mapping.json') as mapping:
         setup = json.load(mapping)
         transactions_with_identifier, analysis = BinlogAnalyser(setup).analyse(transactions)
