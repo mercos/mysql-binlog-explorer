@@ -35,6 +35,9 @@ class Change(object):
 
 
 class BinlogParser(object):
+    def __init__(self, column_mapping=None):
+        self.column_mapping = column_mapping or {}
+
     def parse(self, binlog_file):
         transactions = []
         change_buffer = ''
@@ -66,14 +69,20 @@ class BinlogParser(object):
         command_type = change_buffer.split(' ')[0]
         change_instruction_without_comments = re.sub("/\*.*\*/", "", change_buffer)
         table = self._extract_table(change_instruction_without_comments)
-        where_parameters, set_parameters = self._extract_parameter(command_type, change_instruction_without_comments)
+        table_name_without_namespace = table.replace('`', '').split('.')[-1]
+        where_parameters, set_parameters = self._extract_parameter(
+            command_type,
+            change_instruction_without_comments,
+            self.column_mapping.get(table_name_without_namespace, {})
+        )
+
         return Change(command_type, table, change_instruction_without_comments, where_parameters, set_parameters)
 
     def _extract_table(self, change_instruction_without_comments):
         table_name = re.findall("`.*?`\s", change_instruction_without_comments)[0]
         return table_name.strip()
 
-    def _extract_parameter(self, command_type, change_instruction):
+    def _extract_parameter(self, command_type, change_instruction, column_mapping):
         first_group, second_group = {}, {}
         all_raw_parameters = re.findall("@\d=.*?\s", change_instruction)
 
@@ -89,7 +98,8 @@ class BinlogParser(object):
             parameter_is_quoted = parameter.startswith("'") or parameter.startswith('"')
             if parameter_is_quoted:
                 parameter = parameter[1:len(parameter) - 1]
-            group[int(identifier[1:])] = parse_to_number_if_possible(parameter)
+            column_position = int(identifier[1:])
+            group[column_mapping.get(column_position, column_position)] = parse_to_number_if_possible(parameter)
 
         if command_type == 'DELETE':
             return first_group, {}

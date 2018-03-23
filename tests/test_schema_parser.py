@@ -1,7 +1,7 @@
 from StringIO import StringIO
 from unittest.case import TestCase
 
-from binlogexplorer.schema_parser import parse_schema_to_dict
+from binlogexplorer.schema_parser import parse_schema_to_column_mapping
 
 
 class SchamParserTests(TestCase):
@@ -18,7 +18,7 @@ class SchamParserTests(TestCase):
                                     );""")
 
     def test_parse_tables_with_it_columns_indexed_by_order(self):
-        result = parse_schema_to_dict(self.schema_file)
+        result = parse_schema_to_column_mapping(self.schema_file)
 
         self.assertEqual(len(result), 2)
         self.assertEqual(len(result['test_table1']), 2)

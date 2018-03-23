@@ -2,7 +2,7 @@ import re
 from string import strip
 
 
-def parse_schema_to_dict(schema_file):
+def parse_schema_to_column_mapping(schema_file):
     contents = schema_file.read()
     raw_tables = re.findall('create table(.*?);', contents, re.DOTALL)
     tables = {}

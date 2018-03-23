@@ -1,8 +1,10 @@
 import os
+from StringIO import StringIO
 from datetime import datetime
 from unittest.case import TestCase
 
 from binlogexplorer.binlog_parser import BinlogParser
+from binlogexplorer.schema_parser import parse_schema_to_column_mapping
 
 EXAMPLES_FOLDER = os.path.join(os.path.dirname(__file__), 'examples')
 
@@ -73,6 +75,22 @@ class BinlogParserTests(TestCase):
         self.assertIn('UPDATE', update_change.command_type)
         self.assertEqual({1: 1, 2: 'updated'}, update_change.set_parameters)
         self.assertEqual({1: 1, 2: 'transaction-1'}, update_change.where_parameters)
+
+    def test_parse_parameters_with_actual_name(self):
+        schema = StringIO("""
+        create table test_table
+        (
+            nice_column int null,
+            beautiful_column varchar(20) null
+        );         
+        """)
+        binlog_parser = BinlogParser(column_mapping=parse_schema_to_column_mapping(schema))
+        transactions = binlog_parser.parse(self.binlog_file)
+
+        update_change = transactions[2].statements[2].changes[0]
+        self.assertIn('UPDATE', update_change.command_type)
+        self.assertEqual({'nice_column': 1, 'beautiful_column': 'updated'}, update_change.set_parameters)
+        self.assertEqual({'nice_column': 1, 'beautiful_column': 'transaction-1'}, update_change.where_parameters)
 
     def tearDown(self):
         self.binlog_file.close()
