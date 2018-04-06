@@ -21,14 +21,16 @@
 </head>
 <body>
 
-<div style="width:49%; display: inline-block">
-    <h1 style="text-align: center">Identifiers by Transactions (Top 10)</h1>
-    <canvas id="chart-by-transactions"></canvas>
-</div>
+<div id="charts">
+    <div style="width:49%; display: inline-block">
+        <h1 style="text-align: center">Identifiers by Transactions (Top 10)</h1>
+        <canvas id="chart-by-transactions"></canvas>
+    </div>
 
-<div style="width:49%; display: inline-block">
-    <h1 style="text-align: center">Identifiers by Changes (Top 10)</h1>
-    <canvas id="chart-by-changes"></canvas>
+    <div style="width:49%; display: inline-block">
+        <h1 style="text-align: center">Identifiers by Changes (Top 10)</h1>
+        <canvas id="chart-by-changes"></canvas>
+    </div>
 </div>
 
 <table id="main-data" class="display" cellspacing="0" width="100%">
@@ -127,11 +129,17 @@
     }
 
     $(document).ready(function(){
-        $.get({url: 'binlog-parser/analysis', success: function(data){
-            data = JSON.parse(data);
-            createChart('Changes by ID', 'chart-by-changes', data.changes_by_identifier);
-            createChart('Transactions by ID', 'chart-by-transactions', data.transactions_by_identifier);
-        }})
+        $.get({
+            url: 'binlog-parser/analysis', success: function (data) {
+                data = JSON.parse(data);
+                if (data.changes_by_identifier.length === 0 && data.transactions_by_identifier.length === 0) {
+                    $("#charts").hide()
+                } else {
+                    createChart('Changes by ID', 'chart-by-changes', data.changes_by_identifier);
+                    createChart('Transactions by ID', 'chart-by-transactions', data.transactions_by_identifier);
+                }
+            }
+        })
 
         var table = $('#main-data').DataTable({
             "ajax": "binlog-parser/",
