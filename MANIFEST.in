@@ -1,2 +1,3 @@
 include binlogexplorer/static/*
 include binlogexplorer/template/*
+include binlogexplorer/version

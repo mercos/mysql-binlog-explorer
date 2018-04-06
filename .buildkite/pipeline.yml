@@ -1,0 +1,58 @@
+steps:
+
+  - command: |-
+      echo "~~~ pip install"
+      echo 'odus' | sudo -S rm -rf /tmp/pip_build_root/*
+      echo 'odus' | sudo -S pip install -r requirements.txt
+
+      echo "~~~ test app"
+      python -m unittest discover tests
+
+    label: application test
+    agents:
+      - type=native
+
+  - command: |-
+      echo "~~~ pip install"
+      echo 'odus' | sudo -S rm -rf /tmp/pip_build_root/*
+      echo 'odus' | sudo -S pip install -r requirements.txt
+
+      echo '~~~ update pip'
+      python -m pip install --upgrade pip setuptools wheel
+
+      echo "~~~ building dist"
+      rm -rf dist/*
+      python setup.py sdist
+
+      echo "~~~ testing dist"
+      version=$(cat binlogexplorer/version)
+      pip uninstall mysql-binlog-explorer -y || true
+      pip install dist/mysql-binlog-explorer-${version}.tar.gz --no-cache-dir
+      mysql-binlog-explorer -h
+
+    label: package distribution test
+    agents:
+      - type=native
+
+  - wait
+
+  - command: |-
+      echo "~~~ pip install"
+      echo 'odus' | sudo -S rm -rf /tmp/pip_build_root/*
+      echo 'odus' | sudo -S pip install -r requirements_ci.txt
+
+      echo '~~~ update pip'
+      python -m pip install --upgrade pip setuptools wheel
+
+      echo "~~~ cleaning"
+      rm -rf dist
+
+      echo "~~~ publishing"
+      ./publish.sh
+
+    label: publish
+    branches: master
+    agents:
+      - type=native
+    concurrency: 1
+    concurrency_group: 'mysql-binlog-explorer-deploy'

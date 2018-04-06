@@ -1,9 +1,18 @@
 from setuptools import setup
+import os
+
+with open('README.md') as markdown_content:
+    readme_text = markdown_content.read()
+
+with open(os.path.join('binlogexplorer', 'version')) as version_content:
+    version_text = version_content.read().strip()
 
 setup(
     name='mysql-binlog-explorer',
-    version='0.1',
+    version=version_text,
     description='Web UI to Explore MySQL\'s binlog files a little easier.',
+    long_description=readme_text,
+    long_description_content_type='text/markdown',
     keywords='mysql binlog analysis ui web explore',
     url='https://github.com/meuspedidos/mysql-binlog-explorer',
     author='MeusPedidos Engineering Team',
@@ -14,6 +23,7 @@ setup(
     include_package_data=True,
     install_requires=[
         'bottle==0.12.10',
+        'simplejson==3.13.2'
     ],
     entry_points={
         'console_scripts': ['mysql-binlog-explorer=binlogexplorer.webui:main'],
