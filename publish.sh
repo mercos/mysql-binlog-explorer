@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-version=$(cat version)
+version=$(cat binlogexplorer/version)
 statusCode=$(curl --write-out %{http_code} --silent \
                   --output /dev/null https://pypi.python.org/pypi/mysql-binlog-explorer/${version})
 

@@ -13,6 +13,7 @@ from schema_parser import parse_schema_to_column_mapping
 CURRENT_DIRECTORY = os.path.join(os.path.dirname(__file__))
 TEMPLATE_DIR = os.path.join(CURRENT_DIRECTORY, 'template')
 STATIC_DIR = os.path.join(CURRENT_DIRECTORY, 'static')
+VERSION_FILE = os.path.join(CURRENT_DIRECTORY, 'version')
 
 bottle.debug(True)
 bottle.TEMPLATE_PATH = [TEMPLATE_DIR]
@@ -69,8 +70,15 @@ def parse_cli_arguments():
     cli.add_argument('--schema-ddl', type=file, dest='schema_ddl', help='.ddl file with the \'create\' statements to '
                                                                         'figure out the name of the columns.')
     cli.add_argument('--tenant-identifier', dest='group_identifier', help='name of the column that identify tenant')
+    cli.add_argument('-v', '--version', action='version', version=get_version())
+
     cli = cli.parse_args()
     return cli
+
+
+def get_version():
+    with open(VERSION_FILE) as version:
+        return version.read().strip()
 
 
 def main():
