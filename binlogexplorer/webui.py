@@ -17,13 +17,6 @@ STATIC_DIR = os.path.join(CURRENT_DIRECTORY, 'static')
 bottle.debug(True)
 bottle.TEMPLATE_PATH = [TEMPLATE_DIR]
 
-cli = argparse.ArgumentParser(description='Parses MySQL binlogs')
-cli.add_argument('files', type=file, nargs='+', help='binlog files to proccess')
-cli.add_argument('--schema-ddl', type=file, dest='schema_ddl', help='.ddl file with the \'create\' statements to '
-                                                                    'figure out the name of the columns.')
-cli.add_argument('--tenant-identifier', dest='group_identifier', help='name of the column that identify tenant')
-cli = cli.parse_args()
-
 
 @route('/static/<filename>')
 def server_static(filename):
@@ -70,9 +63,21 @@ def binlog_parser_presenter(list_of_transactions):
     return json.dumps(response, ensure_ascii=False)
 
 
+def parse_cli_arguments():
+    cli = argparse.ArgumentParser(description='Parses MySQL binlogs')
+    cli.add_argument('files', type=file, nargs='+', help='binlog files to proccess')
+    cli.add_argument('--schema-ddl', type=file, dest='schema_ddl', help='.ddl file with the \'create\' statements to '
+                                                                        'figure out the name of the columns.')
+    cli.add_argument('--tenant-identifier', dest='group_identifier', help='name of the column that identify tenant')
+    cli = cli.parse_args()
+    return cli
+
+
 def main():
     global transactions
     global analysis
+
+    cli = parse_cli_arguments()
 
     column_mapping = parse_schema_to_column_mapping(cli.schema_ddl) if cli.schema_ddl else {}
     parser = BinlogParser(column_mapping)

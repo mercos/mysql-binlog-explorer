@@ -1,0 +1,14 @@
+steps:
+
+  - command: |-
+      echo "~~~ pip install"
+      echo 'odus' | sudo -S rm -rf /tmp/pip_build_root/*
+      echo 'odus' | sudo -S pip install -r requirements.txt
+
+      echo "~~~ test"
+      python -m unittest discover tests
+
+    label: tests
+    agents:
+      - type=native
+
