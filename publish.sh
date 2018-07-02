@@ -15,10 +15,10 @@ rm -rf dist/*
 python setup.py sdist
 
 echo 'Testing distribution and installation...'
-pip uninstall mysql-binlog-explorer -y || true
+echo 'odus' | sudo -S pip uninstall mysql-binlog-explorer -y || true
 twine upload --repository-url https://test.pypi.org/legacy/ dist/mysql-binlog-explorer-${version}.tar.gz \
         --skip-existing -u ${TEST_PYPI_USER} -p ${TEST_PYPI_PASSWORD}
-pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple mysql-binlog-explorer
+echo 'odus' | sudo -S pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple mysql-binlog-explorer
 mysql-binlog-explorer -h
 
 echo 'Publishing on PyPi'
