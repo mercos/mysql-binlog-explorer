@@ -50,7 +50,7 @@ mysql-binlog-explorer my-bin-log.txt
 
 ## Screenshot
 
-![image](https://user-images.githubusercontent.com/771129/42182816-e111d4ce-7e15-11e8-8965-75847e7d4f02.png)
+![image](https://user-images.githubusercontent.com/771129/42190310-c3e6ba1e-7e32-11e8-941a-cebb80ad009c.png)
 
 When the tenant information is used, the app can plot a chart with transactions/changes distribution per tenant identifier.
 
