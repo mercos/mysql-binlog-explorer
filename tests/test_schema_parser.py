@@ -1,4 +1,8 @@
-from StringIO import StringIO
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
+
 from unittest.case import TestCase
 
 from binlogexplorer.schema_parser import parse_schema_to_column_mapping
