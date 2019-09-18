@@ -1,3 +1,6 @@
+import six
+
+
 class BinlogAnalyser(object):
     def __init__(self, group_identifier):
         self.group_identifier = group_identifier
@@ -29,4 +32,4 @@ class BinlogAnalyser(object):
 
 
 def order_by_count(itens_by_identifier):
-    return sorted(itens_by_identifier.iteritems(), key=lambda x: x[1], reverse=True)
+    return sorted(six.iteritems(itens_by_identifier), key=lambda x: x[1], reverse=True)
