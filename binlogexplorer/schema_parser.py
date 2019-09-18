@@ -15,7 +15,7 @@ def parse_schema_to_column_mapping(schema_file):
         columns = __remove_commas_from_column_type_declaration(columns_start, raw_table)
         columns = map(strip, columns.split(','))
         columns = map(lambda column_raw: column_raw.split(' ')[0], columns)
-        tables[table_name] = dict(zip(range(1, len(columns) + 1), columns))
+        tables[table_name] = dict(zip(range(1, len(list(columns)) + 1), columns))
 
     return tables
 
