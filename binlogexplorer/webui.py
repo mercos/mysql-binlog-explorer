@@ -6,9 +6,9 @@ import bottle
 import simplejson
 from bottle import route, run, template, static_file
 
-from binlog_analyser import BinlogAnalyser
-from binlog_parser import BinlogParser
-from schema_parser import parse_schema_to_column_mapping
+from binlogexplorer.binlog_analyser import BinlogAnalyser
+from binlogexplorer.binlog_parser import BinlogParser
+from binlogexplorer.schema_parser import parse_schema_to_column_mapping
 
 CURRENT_DIRECTORY = os.path.join(os.path.dirname(__file__))
 TEMPLATE_DIR = os.path.join(CURRENT_DIRECTORY, 'template')
