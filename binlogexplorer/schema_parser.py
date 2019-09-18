@@ -1,5 +1,8 @@
 import re
-from string import strip
+
+
+def strip(string):
+    return string.strip()
 
 
 def parse_schema_to_column_mapping(schema_file):
