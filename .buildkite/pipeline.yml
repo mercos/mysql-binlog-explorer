@@ -9,8 +9,6 @@ steps:
       python -m unittest discover tests
 
     label: application test
-    agents:
-      - type=native
 
   - command: |-
       echo "~~~ pip install"
@@ -28,8 +26,6 @@ steps:
       mysql-binlog-explorer -h
 
     label: package distribution test
-    agents:
-      - type=native
 
   - wait
 
@@ -46,7 +42,5 @@ steps:
 
     label: publish
     branches: master
-    agents:
-      - type=native
     concurrency: 1
     concurrency_group: 'mysql-binlog-explorer-deploy'
