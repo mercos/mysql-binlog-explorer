@@ -41,6 +41,5 @@ jobs:
     - name: Testing dist
       run: |
            VERSION=$(cat binlogexplorer/version)
-           pip uninstall mysql-binlog-explorer -y
            pip install dist/mysql-binlog-explorer-${VERSION}.tar.gz --no-cache-dir
            mysql-binlog-explorer -h
