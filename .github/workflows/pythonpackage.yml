@@ -40,7 +40,7 @@ jobs:
       run: python setup.py sdist
     - name: Testing dist
       run: |
-           version=$(cat binlogexplorer/version)
-           echo 'odus' | sudo -S pip uninstall mysql-binlog-explorer -y || true
-           echo 'odus' | sudo -S pip install dist/mysql-binlog-explorer-\${version}.tar.gz --no-cache-dir
+           VERSION=$(cat binlogexplorer/version)
+           pip uninstall mysql-binlog-explorer -y
+           pip install dist/mysql-binlog-explorer-${VERSION}.tar.gz --no-cache-dir
            mysql-binlog-explorer -h
