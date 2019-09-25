@@ -3,9 +3,8 @@ set -e
 
 VERSION=$(cat binlogexplorer/version)
 
-STATUS_CODE=$(curl --write-out %{http_code} --silent --output /dev/null https://pypi.org/project/mysql-binlog-explorer/$V{ERSION}/)
+STATUS_CODE=$(curl --write-out %{http_code} --silent --output /dev/null https://pypi.org/project/mysql-binlog-explorer/${VERSION}/)
 
-https://pypi.org/project/mysql-binlog-explorer/0.2.3/
 if [[ ${STATUS_CODE } = "200" ]]; then
   echo "Version '${VERSION}' already published. Did you forget to update the version code?"
   exit 1
