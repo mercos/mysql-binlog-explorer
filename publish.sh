@@ -5,7 +5,7 @@ VERSION=$(cat binlogexplorer/version)
 
 STATUS_CODE=$(curl --write-out %{http_code} --silent --output /dev/null https://pypi.org/project/mysql-binlog-explorer/${VERSION}/)
 
-if [[ ${STATUS_CODE } = "200" ]]; then
+if [[ ${STATUS_CODE} = "200" ]]; then
   echo "Version '${VERSION}' already published. Did you forget to update the version code?"
   exit 1
 fi
