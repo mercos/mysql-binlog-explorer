@@ -21,7 +21,7 @@ setup(
     zip_safe=False,
     include_package_data=True,
     install_requires=[
-        'bottle==0.12.17',
+        'bottle==0.12.18',
         'simplejson==3.17.0'
     ],
     entry_points={
